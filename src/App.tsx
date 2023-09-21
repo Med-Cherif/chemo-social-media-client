@@ -1,19 +1,28 @@
-import { useState } from "react";
-import { Routes, Route } from "react-router-dom";
-import "./App.css";
+import Home from "./pages/Home";
 import RootLayout from "./layouts/RootLayout";
+import AuthLayout from "./layouts/AuthLayout";
+import { Box } from "@chakra-ui/react";
+import allRoutes from "./data/allRoutes";
+import { Routes, Route } from "react-router-dom";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const { auth: authRoutes } = allRoutes;
 
   return (
-    <div className="App">
+    <Box className="App" backgroundColor={"blackAlpha.100"}>
       <Routes>
         <Route path="/" element={<RootLayout />}>
-          <Route path="" element={<></>} />
+          <Route path="/" element={<Home />} />
+        </Route>
+        <Route path="/" element={<AuthLayout />}>
+          {authRoutes.map((route) => {
+            return (
+              <Route key={route.id} path={route.path} element={route.element} />
+            );
+          })}
         </Route>
       </Routes>
-    </div>
+    </Box>
   );
 }
 
