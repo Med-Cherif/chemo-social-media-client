@@ -9,7 +9,7 @@ function App() {
   const { auth: authRoutes } = allRoutes;
 
   return (
-    <Box className="App" backgroundColor={"blackAlpha.100"}>
+    <Box className="App">
       <Routes>
         <Route path="/" element={<RootLayout />}>
           <Route path="/" element={<Home />} />
