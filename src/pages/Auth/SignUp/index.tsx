@@ -13,14 +13,11 @@ import AuthSubmitButton from "../../../components/auth/AuthSubmitButton";
 import AuthBottomText from "../../../components/auth/AuthBottomText";
 import { useAuth } from "../../../hooks/useUser";
 import FormControlInput from "../../../components/form/FormControlInput";
-import {
-  extractUseFormError,
-  handleUseFormErrors,
-} from "../../../helpers/errorHelpers";
+import { handleUseFormErrors } from "../../../helpers/errorHelpers";
 import AlertError from "../../../components/common/AlertError";
 
 const SignUp = () => {
-  const { form, mutation, error, onSubmitSuccess } = useAuth("register", {});
+  const { form, error, loading, onSubmitSuccess } = useAuth("register", {});
   const {
     register,
     formState: { errors },
@@ -32,6 +29,7 @@ const SignUp = () => {
   return (
     <Box>
       <AuthTitle title="Sign Up" />
+
       <AlertError error={error} />
       <form onSubmit={form.handleSubmit(onSubmitSuccess)}>
         <VStack gap={2} alignItems={"flex-start"}>
@@ -63,7 +61,7 @@ const SignUp = () => {
             errorMessage={passwordConfirmation}
           />
         </VStack>
-        <AuthSubmitButton text="Sign Up" isLoading={mutation.isLoading} />
+        <AuthSubmitButton text="Sign Up" isLoading={loading} />
         <AuthBottomText
           link="/sign-in"
           text="Already have an account ? Sign In"

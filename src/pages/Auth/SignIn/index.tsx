@@ -18,9 +18,12 @@ import AuthBottomText from "../../../components/auth/AuthBottomText";
 import { yupResolver } from "@hookform/resolvers/yup";
 import loginSchema from "../../../schemas/loginSchema";
 import AlertError from "../../../components/common/AlertError";
+import { gql } from "@apollo/client";
+import userRequests from "../../../graphql/requests/userRequests";
+import apolloClient from "../../../graphql/client";
 
 const SignIn = () => {
-  const { form, mutation, error, onSubmitSuccess } = useAuth("login", {
+  const { form, loading, error, onSubmitSuccess } = useAuth("login", {
     resolver: yupResolver(loginSchema) as any,
   });
 
@@ -53,7 +56,7 @@ const SignIn = () => {
             <Link to={""}>Forgot Password ?</Link>
           </Box>
         </VStack>
-        <AuthSubmitButton text="Sign In" isLoading={mutation.isLoading} />
+        <AuthSubmitButton text="Sign In" isLoading={loading} />
         <AuthBottomText
           link="/sign-up"
           text="Don't have an account ? Sign Up"

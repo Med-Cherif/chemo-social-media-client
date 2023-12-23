@@ -13,12 +13,14 @@ export type TErrorCode =
   | "PERSISTED_QUERY_NOT_SUPPORTED";
 
 export function extractError(error: any) {
-  const statusCode = error?.response?.status || 500;
-  const message =
-    error.response?.errors?.[0]?.message || "Something went wrong";
-  const code =
-    error.response?.errors?.[0]?.extensions?.code || "INTERNAL_SERVER_ERROR";
-  const errors = error?.response?.errors?.[0]?.extensions?.errors || {};
+  error = error?.networkError?.result;
+  const statusCode = error?.statusCode || 500;
+
+  const resultErrors = error?.errors || [];
+
+  const message = resultErrors?.[0]?.message || "Something went wrong";
+  const code = resultErrors?.[0]?.extensions?.code || "INTERNAL_SERVER_ERROR";
+  const errors = resultErrors?.[0]?.extensions?.errors || {};
 
   return {
     message,

@@ -8,6 +8,16 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import theme from "./theme";
 import store from "./store";
+import {
+  ApolloClient,
+  HttpLink,
+  concat,
+  from,
+  InMemoryCache,
+  ApolloProvider,
+} from "@apollo/client";
+import { END_POINT } from "./config/index.ts";
+import apolloClient from "./graphql/client.ts";
 
 const client = new QueryClient({
   defaultOptions: {
@@ -22,13 +32,15 @@ const client = new QueryClient({
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <Provider store={store}>
-      <QueryClientProvider client={client}>
-        <Router>
-          <ChakraProvider theme={theme}>
-            <App />
-          </ChakraProvider>
-        </Router>
-      </QueryClientProvider>
+      <ApolloProvider client={apolloClient}>
+        <QueryClientProvider client={client}>
+          <Router>
+            <ChakraProvider theme={theme}>
+              <App />
+            </ChakraProvider>
+          </Router>
+        </QueryClientProvider>
+      </ApolloProvider>
     </Provider>
   </React.StrictMode>
 );

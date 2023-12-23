@@ -1,7 +1,6 @@
-import { useMutation } from "@tanstack/react-query";
+// import { useMutation } from "@tanstack/react-query";
 import { useForm, UseFormProps } from "react-hook-form";
-import graphqlQLClient from "../graphql";
-import userRequests from "../graphql/userRequests";
+import userRequests from "../graphql/requests/userRequests";
 import { TObject } from "../types/object";
 import { useAppDispatch } from "./useRedux";
 import { userActions } from "../store/slices/userSlice";
@@ -12,6 +11,8 @@ import {
   handleMultipleErrors,
   setFormErrors,
 } from "../helpers/errorHelpers";
+import apolloClient from "../graphql/client";
+import { useMutation } from "@apollo/client";
 
 export const useAuth = (
   dataKey: "register" | "login",
@@ -23,19 +24,13 @@ export const useAuth = (
 
   const [error, setError] = useState(null);
 
-  const mutation = useMutation({
-    mutationFn: (data: TObject) => {
-      return graphqlQLClient
-        .request(userRequests[dataKey], { data })
-        .then((response) => (response as any)[dataKey]);
-    },
-    onMutate() {
-      setError(null);
-    },
-    onSuccess(data) {
-      dispatch(userActions.authSuccess(data));
+  const [mutate, { loading }] = useMutation(userRequests[dataKey], {
+    onCompleted(data) {
+      // console.log(data);
+      dispatch(userActions.authSuccess(data[dataKey]));
       navigate("/");
     },
+
     onError(error) {
       handleMultipleErrors({
         error,
@@ -46,13 +41,14 @@ export const useAuth = (
   });
 
   const onSubmitSuccess = (data: TObject) => {
-    mutation.mutate(data);
+    setError(null);
+    mutate({ variables: { data } });
   };
 
   return {
     form,
-    mutation,
     error,
+    loading,
     onSubmitSuccess,
   };
 };
